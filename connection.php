@@ -27,4 +27,22 @@ function selectAll() {
   }
   return $todo;
 }
+
+function updateDb($id, $data) {
+  $dbh = connectPdo();
+  $sql = 'UPDATE todos SET todo = :todo WHERE id = :id';
+  $stmt = $dbh->prepare($sql);
+  $stmt->bindParam(':todo', $data, PDP::STR);
+  $stmt->bindVlue(':id', (int)$id, PDO::INT);
+  $stmt->execute();
+}
+
+function getSelectData($id) {
+  $dbh = connectPdo();
+  $sql = 'SELECT todo FROM todos WHERE id = :id AND deleted_at IS NULL';
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute(array(':id' => (int)$id));
+  $data = $stmt->fetch();
+  return $data['todo'];
+}
 ?>

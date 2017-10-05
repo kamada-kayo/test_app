@@ -32,8 +32,8 @@ function updateDb($id, $data) {
   $dbh = connectPdo();
   $sql = 'UPDATE todos SET todo = :todo WHERE id = :id';
   $stmt = $dbh->prepare($sql);
-  $stmt->bindParam(':todo', $data, PDP::STR);
-  $stmt->bindVlue(':id', (int)$id, PDO::INT);
+  $stmt->bindParam(':todo', $data, PDO::STR);
+  $stmt->bindValue(':id', (int)$id, PDO::INT);
   $stmt->execute();
 }
 
@@ -44,5 +44,15 @@ function getSelectData($id) {
   $stmt->execute(array(':id' => (int)$id));
   $data = $stmt->fetch();
   return $data['todo'];
+}
+
+function deleteDb($id) {
+  $dbh = connectPdo();
+  $nowTime = date("Y-m-d H:i:s");
+  $sql = 'UPDATE todos SET deleted_at = :deleted_at WHERE id = :id';
+  $stmt = $dbh->prepare($sql);
+  $stmt->bindParam(':deleted_at', $nowTime);
+  $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+  $stmt->execute();
 }
 ?>
